@@ -1,0 +1,15 @@
+ros-foxy-sick-safetyscanners2 (1.0.1-1focal) focal; urgency=high
+
+  * changed the parameter callback interface so its only triggered
+    when the parameters of this node are called
+  * Contributors: Lennart Puck
+
+ -- Lennart Puck <puck@fzi.de>  Thu, 04 Mar 2021 23:00:00 -0000
+
+ros-foxy-sick-safetyscanners2 (1.0.0-1focal) focal; urgency=high
+
+  * Initial Release
+
+ -- Lennart Puck <puck@fzi.de>  Sun, 10 Jan 2021 23:00:00 -0000
+
+
