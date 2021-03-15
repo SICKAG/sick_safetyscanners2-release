@@ -2,6 +2,11 @@
 Changelog for package sick_safetyscanners2
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+1.0.2 (2021-03-15)
+------------------
+* added missing dependencies to package xml
+* Contributors: Lennart Puck
+
 1.0.1 (2021-03-05)
 ------------------
 * changed the parameter callback interface so its only triggered
