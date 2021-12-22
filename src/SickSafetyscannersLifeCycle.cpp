@@ -25,35 +25,44 @@
 
 //----------------------------------------------------------------------
 /*!
- * \file SickSafetyscannersRos.cpp
+ * \file SickSafetyscannersLifeCycle.cpp
  *
- * \author  Lennart Puck <puck@fzi.de>
- * \date    2020-12-08
+ * \authors  Soma gallai<soma.gallai@cm-robotics.com>  Erwin Lejeune <erwin.lejeune@cm-robotics.com>
+ * \date    2021-05-27
  */
 //----------------------------------------------------------------------
 
-#include <sick_safetyscanners2/SickSafetyscannersRos2.h>
+#include <sick_safetyscanners2/SickSafetyscannersLifeCycle.hpp>
 
 namespace sick {
 
-SickSafetyscannersRos2::SickSafetyscannersRos2()
-  : Node("SickSafetyscannersRos2")
+
+SickSafetyscannersLifeCycle::SickSafetyscannersLifeCycle(const std::string& node_name,
+                                                         bool intra_process_comms)
+  : rclcpp_lifecycle::LifecycleNode(
+      node_name, rclcpp::NodeOptions().use_intra_process_comms(intra_process_comms))
   , m_time_offset(0.0)
   , m_range_min(0.0)
   , m_range_max(0.0)
   , m_angle_offset(-90.0)
   , m_use_pers_conf(false)
 {
-  RCLCPP_INFO(this->get_logger(), "Initializing SickSafetyscannersRos2 Node");
+  RCLCPP_INFO(this->get_logger(), "Initializing SickSafetyscannersLifeCycle ");
 
   // read parameters!
   initialize_parameters();
   load_parameters();
+}
+
+rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn
+SickSafetyscannersLifeCycle::on_configure(const rclcpp_lifecycle::State&)
+{
+  RCLCPP_INFO(this->get_logger(), "on_configure()...");
   sick::types::port_t tcp_port{2122};
 
   // Dynamic Parameter Change client
   m_param_callback = add_on_set_parameters_callback(
-    std::bind(&SickSafetyscannersRos2::parametersCallback, this, std::placeholders::_1));
+    std::bind(&SickSafetyscannersLifeCycle::parametersCallback, this, std::placeholders::_1));
 
   // TODO reconfigure?
   // TODO diagnostics
@@ -70,13 +79,15 @@ SickSafetyscannersRos2::SickSafetyscannersRos2()
 
   m_field_data_service = this->create_service<sick_safetyscanners2_interfaces::srv::FieldData>(
     "field_data",
-    std::bind(
-      &SickSafetyscannersRos2::getFieldData, this, std::placeholders::_1, std::placeholders::_2));
+    std::bind(&SickSafetyscannersLifeCycle::getFieldData,
+              this,
+              std::placeholders::_1,
+              std::placeholders::_2));
+
 
   // Bind callback
   std::function<void(const sick::datastructure::Data&)> callback =
-    std::bind(&SickSafetyscannersRos2::receiveUDPPaket, this, std::placeholders::_1);
-
+    std::bind(&SickSafetyscannersLifeCycle::receiveUDPPaket, this, std::placeholders::_1);
 
   // Create a sensor instance
   if (m_communications_settings.host_ip.is_multicast())
@@ -99,18 +110,70 @@ SickSafetyscannersRos2::SickSafetyscannersRos2()
   {
     readPersistentConfig();
   }
-
   m_msg_creator = std::make_unique<sick::MessageCreator>(
     m_frame_id, m_time_offset, m_range_min, m_range_max, m_angle_offset, m_min_intensities);
 
+  RCLCPP_INFO(this->get_logger(), "Node Configured");
+
+  return rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn::SUCCESS;
+}
+
+rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn
+SickSafetyscannersLifeCycle::on_activate(const rclcpp_lifecycle::State&)
+{
+  RCLCPP_INFO(this->get_logger(), "on_activate()...");
   // Start async receiving and processing of sensor data
   m_device->run();
   m_device->changeSensorSettings(m_communications_settings);
 
-  RCLCPP_INFO(this->get_logger(), "Node Configured and running");
+  m_laser_scan_publisher->on_activate();
+  m_extended_laser_scan_publisher->on_activate();
+  m_output_paths_publisher->on_activate();
+  m_raw_data_publisher->on_activate();
+
+  RCLCPP_INFO(this->get_logger(), "Node activated, device is running...");
+
+  return rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn::SUCCESS;
+}
+rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn
+SickSafetyscannersLifeCycle::on_deactivate(const rclcpp_lifecycle::State&)
+{
+  RCLCPP_INFO(this->get_logger(), "on_deactivate()...");
+  m_device->stop();
+  m_laser_scan_publisher->on_deactivate();
+  m_extended_laser_scan_publisher->on_deactivate();
+  m_output_paths_publisher->on_deactivate();
+  m_raw_data_publisher->on_deactivate();
+
+  RCLCPP_INFO(this->get_logger(), "Node deactivated, device stopped...");
+
+  return rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn::SUCCESS;
 }
 
-void SickSafetyscannersRos2::readTypeCodeSettings()
+rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn
+SickSafetyscannersLifeCycle::on_cleanup(const rclcpp_lifecycle::State&)
+{
+  RCLCPP_INFO(this->get_logger(), "on_cleanup()...");
+  m_laser_scan_publisher.reset();
+  m_extended_laser_scan_publisher.reset();
+  m_output_paths_publisher.reset();
+  m_raw_data_publisher.reset();
+
+  return rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn::SUCCESS;
+}
+rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn
+SickSafetyscannersLifeCycle::on_shutdown(const rclcpp_lifecycle::State&)
+{
+  RCLCPP_INFO(this->get_logger(), "on_shutdown()...");
+  m_laser_scan_publisher.reset();
+  m_extended_laser_scan_publisher.reset();
+  m_output_paths_publisher.reset();
+  m_raw_data_publisher.reset();
+
+  return rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn::SUCCESS;
+}
+
+void SickSafetyscannersLifeCycle::readTypeCodeSettings()
 {
   RCLCPP_INFO(this->get_logger(), "Reading Type code settings");
   sick::datastructure::TypeCode type_code;
@@ -120,7 +183,7 @@ void SickSafetyscannersRos2::readTypeCodeSettings()
   m_range_max                                = type_code.getMaxRange();
 }
 
-void SickSafetyscannersRos2::readPersistentConfig()
+void SickSafetyscannersLifeCycle::readPersistentConfig()
 {
   RCLCPP_INFO(this->get_logger(), "Reading Persistent Configuration");
   sick::datastructure::ConfigData config_data;
@@ -129,7 +192,7 @@ void SickSafetyscannersRos2::readPersistentConfig()
   m_communications_settings.end_angle   = config_data.getEndAngle();
 }
 
-void SickSafetyscannersRos2::initialize_parameters()
+void SickSafetyscannersLifeCycle::initialize_parameters()
 {
   this->declare_parameter<std::string>("frame_id", "scan");
   this->declare_parameter<std::string>("sensor_ip", "192.168.1.11");
@@ -151,7 +214,7 @@ void SickSafetyscannersRos2::initialize_parameters()
   this->declare_parameter<float>("min_intensities", 0.f);
 }
 
-void SickSafetyscannersRos2::load_parameters()
+void SickSafetyscannersLifeCycle::load_parameters()
 {
   rclcpp::Logger node_logger = this->get_logger();
 
@@ -251,7 +314,7 @@ void SickSafetyscannersRos2::load_parameters()
 }
 
 rcl_interfaces::msg::SetParametersResult
-SickSafetyscannersRos2::parametersCallback(std::vector<rclcpp::Parameter> parameters)
+SickSafetyscannersLifeCycle::parametersCallback(std::vector<rclcpp::Parameter> parameters)
 {
   rcl_interfaces::msg::SetParametersResult result;
   result.successful         = true;
@@ -390,7 +453,7 @@ SickSafetyscannersRos2::parametersCallback(std::vector<rclcpp::Parameter> parame
 }
 
 
-void SickSafetyscannersRos2::receiveUDPPaket(const sick::datastructure::Data& data)
+void SickSafetyscannersLifeCycle::receiveUDPPaket(const sick::datastructure::Data& data)
 {
   if (!m_msg_creator)
   {
@@ -419,7 +482,7 @@ void SickSafetyscannersRos2::receiveUDPPaket(const sick::datastructure::Data& da
 }
 
 
-bool SickSafetyscannersRos2::getFieldData(
+bool SickSafetyscannersLifeCycle::getFieldData(
   const std::shared_ptr<sick_safetyscanners2_interfaces::srv::FieldData::Request> request,
   std::shared_ptr<sick_safetyscanners2_interfaces::srv::FieldData::Response> response)
 {
