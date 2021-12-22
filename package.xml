@@ -2,7 +2,7 @@
 <?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="3">
   <name>sick_safetyscanners2</name>
-  <version>1.0.2</version>
+  <version>1.0.3</version>
   <description>ROS2 Driver for the SICK safetyscanners</description>
   <maintainer email="puck@fzi.de">Lennart Puck</maintainer>
   <author>Lennart Puck</author>
@@ -12,6 +12,7 @@
   
   <depend>boost</depend>
   <depend>rclcpp</depend>
+  <depend>rclcpp_lifecycle</depend>
   <depend>sensor_msgs</depend>
   <depend>sick_safetyscanners_base</depend>
   <depend>sick_safetyscanners2_interfaces</depend>

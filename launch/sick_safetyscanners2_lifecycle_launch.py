@@ -5,8 +5,8 @@ def generate_launch_description():
     return LaunchDescription([
         Node(
             package="sick_safetyscanners2",
-            executable="sick_safetyscanners2_node",
-            name="sick_safetyscanners2_node",
+            executable="sick_safetyscanners2_lifecycle_node",
+            name="sick_safetyscanners2_lifecycle_node",
             output="screen",
             emulate_tty=True,
             parameters=[
