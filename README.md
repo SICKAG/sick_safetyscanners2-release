@@ -1,3 +1,26 @@
+## sick_safetyscanners2 (foxy) - 1.0.3-1
+
+The packages in the `sick_safetyscanners2` repository were released into the `foxy` distro by running `/usr/bin/bloom-release --ros-distro foxy --track foxy sick_safetyscanners2` on `Wed, 22 Dec 2021 13:00:15 -0000`
+
+The `sick_safetyscanners2` package was released.
+
+Version of package(s) in repository `sick_safetyscanners2`:
+
+- upstream repository: https://github.com/SICKAG/sick_safetyscanners2.git
+- release repository: https://github.com/SICKAG/sick_safetyscanners2-release.git
+- rosdistro version: `1.0.2-1`
+- old version: `1.0.2-1`
+- new version: `1.0.3-1`
+
+Versions of tools used:
+
+- bloom version: `0.10.7`
+- catkin_pkg version: `0.4.24`
+- rosdep version: `0.21.0`
+- rosdistro version: `0.8.3`
+- vcstools version: `0.1.42`
+
+
 ## sick_safetyscanners2 (foxy) - 1.0.2-1
 
 The packages in the `sick_safetyscanners2` repository were released into the `foxy` distro by running `/usr/bin/bloom-release --ros-distro foxy --track foxy sick_safetyscanners2` on `Mon, 15 Mar 2021 09:45:56 -0000`
