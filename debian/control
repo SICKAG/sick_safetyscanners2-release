@@ -1,0 +1,12 @@
+Source: ros-galactic-sick-safetyscanners2
+Section: misc
+Priority: optional
+Maintainer: Lennart Puck <puck@fzi.de>
+Build-Depends: debhelper (>= 9.0.0), libboost-all-dev, ros-galactic-ament-cmake, ros-galactic-ament-lint-auto, ros-galactic-ament-lint-common, ros-galactic-rclcpp, ros-galactic-rclcpp-lifecycle, ros-galactic-sensor-msgs, ros-galactic-sick-safetyscanners-base, ros-galactic-sick-safetyscanners2-interfaces, ros-galactic-ros-workspace
+Homepage: 
+Standards-Version: 3.9.2
+
+Package: ros-galactic-sick-safetyscanners2
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, libboost-all-dev, ros-galactic-rclcpp, ros-galactic-rclcpp-lifecycle, ros-galactic-sensor-msgs, ros-galactic-sick-safetyscanners-base, ros-galactic-sick-safetyscanners2-interfaces, ros-galactic-ros-workspace
+Description: ROS2 Driver for the SICK safetyscanners
