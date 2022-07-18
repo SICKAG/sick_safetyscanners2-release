@@ -1,0 +1,12 @@
+Source: ros-humble-sick-safetyscanners2
+Section: misc
+Priority: optional
+Maintainer: Lennart Puck <puck@fzi.de>
+Build-Depends: debhelper (>= 9.0.0), libboost-all-dev, ros-humble-ament-cmake, ros-humble-ament-lint-auto <!nocheck>, ros-humble-ament-lint-common <!nocheck>, ros-humble-rclcpp, ros-humble-rclcpp-lifecycle, ros-humble-sensor-msgs, ros-humble-sick-safetyscanners-base, ros-humble-sick-safetyscanners2-interfaces, ros-humble-ros-workspace
+Homepage: 
+Standards-Version: 3.9.2
+
+Package: ros-humble-sick-safetyscanners2
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, libboost-all-dev, ros-humble-rclcpp, ros-humble-rclcpp-lifecycle, ros-humble-sensor-msgs, ros-humble-sick-safetyscanners-base, ros-humble-sick-safetyscanners2-interfaces, ros-humble-ros-workspace
+Description: ROS2 Driver for the SICK safetyscanners
