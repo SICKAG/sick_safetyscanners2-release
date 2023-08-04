@@ -1,0 +1,34 @@
+ros-iron-sick-safetyscanners2 (1.0.3-1bullseye) bullseye; urgency=high
+
+  * Fixes unsafe pointer access in UDP callback
+  * Implement lifecycle node
+  * Added functionality to allow multicast
+  * set not using the default sick angles as default
+  * moved changeSensor settings to be always be invoked
+  * fixed typo in launch file
+  * Contributors: Brice, Erwin Lejeune, Soma Gallai, Lennart Puck, Tanmay
+
+ -- Lennart Puck <puck@fzi.de>  Tue, 21 Dec 2021 23:00:00 -0000
+
+ros-iron-sick-safetyscanners2 (1.0.2-1bullseye) bullseye; urgency=high
+
+  * added missing dependencies to package xml
+  * Contributors: Lennart Puck
+
+ -- Lennart Puck <puck@fzi.de>  Sun, 14 Mar 2021 23:00:00 -0000
+
+ros-iron-sick-safetyscanners2 (1.0.1-1bullseye) bullseye; urgency=high
+
+  * changed the parameter callback interface so its only triggered
+    when the parameters of this node are called
+  * Contributors: Lennart Puck
+
+ -- Lennart Puck <puck@fzi.de>  Thu, 04 Mar 2021 23:00:00 -0000
+
+ros-iron-sick-safetyscanners2 (1.0.0-1bullseye) bullseye; urgency=high
+
+  * Initial Release
+
+ -- Lennart Puck <puck@fzi.de>  Sun, 10 Jan 2021 23:00:00 -0000
+
+
