@@ -1,3 +1,26 @@
+## sick_safetyscanners2 (iron) - 1.0.3-1
+
+The packages in the `sick_safetyscanners2` repository were released into the `iron` distro by running `/usr/bin/bloom-release --ros-distro iron --track iron sick_safetyscanners2` on `Fri, 04 Aug 2023 07:07:57 -0000`
+
+The `sick_safetyscanners2` package was released.
+
+Version of package(s) in repository `sick_safetyscanners2`:
+
+- upstream repository: https://github.com/SICKAG/sick_safetyscanners2.git
+- release repository: unknown
+- rosdistro version: `null`
+- old version: `null`
+- new version: `1.0.3-1`
+
+Versions of tools used:
+
+- bloom version: `0.11.2`
+- catkin_pkg version: `0.5.2`
+- rosdep version: `0.22.2`
+- rosdistro version: `0.9.0`
+- vcstools version: `0.1.42`
+
+
 ## sick_safetyscanners2 (humble) - 1.0.3-1
 
 The packages in the `sick_safetyscanners2` repository were released into the `humble` distro by running `/usr/bin/bloom-release --ros-distro humble --track humble sick_safetyscanners2` on `Mon, 18 Jul 2022 08:36:55 -0000`
